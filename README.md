@@ -35,7 +35,7 @@ slugifyAll(["Hello World", "Second Post"]);
 
 | Function | Signature | Notes |
 | --- | --- | --- |
-| `slugify` | `slugify(input: string, options?: { maxLength?: number }): string` | Throws `TypeError` for non-strings or invalid options. |
+| `slugify` | `slugify(input: string, options?: { maxLength?: number }): string` | Guaranteed idempotent: `slugify(slugify(input))` equals `slugify(input)`. Throws `TypeError` for non-strings or invalid options. |
 | `slugifyAll` | `slugifyAll(inputs: string[]): string[]` | Throws `TypeError` for non-arrays. |
 
 `slugify` folds Latin diacritics, preserves Unicode letters and numbers
