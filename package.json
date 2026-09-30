@@ -1,0 +1,27 @@
+{
+  "name": "slugkit",
+  "version": "0.1.0",
+  "description": "Tiny zero-dependency URL slug utilities. Demo repo for GitHub Copilot cloud agent.",
+  "type": "module",
+  "main": "src/index.js",
+  "exports": {
+    ".": "./src/index.js"
+  },
+  "files": [
+    "src"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "test": "node --test",
+    "test:watch": "node --test --watch"
+  },
+  "keywords": [
+    "slug",
+    "url",
+    "demo"
+  ],
+  "license": "MIT",
+  "private": true
+}
