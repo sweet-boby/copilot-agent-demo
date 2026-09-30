@@ -23,6 +23,7 @@ import { slugify, slugifyAll } from "slugkit";
 
 slugify("Hello World");            // "hello-world"
 slugify(`It's a "quoted" title`);  // "its-a-quoted-title"
+slugify("It’s a “quoted” title");   // "its-a-quoted-title"
 slugify("Café déjà vu");           // "cafe-deja-vu"
 slugify("Hello 世界");              // "hello-世界"
 slugify("Hello Beautiful World", { maxLength: 12 }); // "hello"
@@ -38,12 +39,13 @@ slugifyAll(["Hello World", "Second Post"]);
 | `slugifyAll` | `slugifyAll(inputs: string[]): string[]` | Throws `TypeError` for non-arrays. |
 
 `slugify` folds Latin diacritics, preserves Unicode letters and numbers
-(including CJK), and removes emoji and symbols. Its optional `maxLength` must
-be a non-negative integer or `Infinity`: `0`, `Infinity`, or an omitted value
-leaves the slug untruncated. A positive value keeps only complete
-dash-separated words that fit within the limit; if the first word is too long,
-the result is an empty string. `slugifyAll` retains its existing signature and
-behavior.
+(including CJK), removes ASCII and typographic quotation marks instead of
+turning them into separators, and removes emoji and symbols. Its optional
+`maxLength` must be a non-negative integer or `Infinity`: `0`, `Infinity`, or
+an omitted value leaves the slug untruncated. A positive value keeps only
+complete dash-separated words that fit within the limit; if the first word is
+too long, the result is an empty string. `slugifyAll` retains its existing
+signature and behavior.
 
 | Input | Output |
 | --- | --- |

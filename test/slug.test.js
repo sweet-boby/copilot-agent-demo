@@ -19,6 +19,12 @@ test("drops quotes instead of turning them into dashes", () => {
   assert.equal(slugify(`It's a "quoted" title`), "its-a-quoted-title");
 });
 
+test("drops typographic quotes and apostrophes", () => {
+  assert.equal(slugify("It’s a “quoted” title"), "its-a-quoted-title");
+  assert.equal(slugify("don’t"), "dont");
+  assert.equal(slugify("‚quoted„ ‘words’"), "quoted-words");
+});
+
 test("keeps punctuation out of the slug", () => {
   assert.equal(slugify("Hello, World!"), "hello-world");
 });

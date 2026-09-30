@@ -30,7 +30,7 @@ export function slugify(input, options = {}) {
       letter.normalize("NFD").replace(/\p{M}/gu, ""),
     )
     .toLowerCase()
-    .replace(/['"]/g, "")
+    .replace(/['"‘’“”‚„]/g, "")
     .replace(/[^\p{L}\p{N}]+/gu, "-")
     .replace(/^-+|-+$/g, "");
 
