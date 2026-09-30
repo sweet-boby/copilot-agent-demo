@@ -23,6 +23,10 @@ import { slugify, slugifyAll } from "slugkit";
 
 slugify("Hello World");            // "hello-world"
 slugify(`It's a "quoted" title`);  // "its-a-quoted-title"
+slugify("It’s a “quoted” title");   // "its-a-quoted-title"
+slugify("Café déjà vu");           // "cafe-deja-vu"
+slugify("Hello 世界");              // "hello-世界"
+slugify("Hello Beautiful World", { maxLength: 12 }); // "hello"
 slugifyAll(["Hello World", "Second Post"]);
 // ["hello-world", "second-post"]
 ```
@@ -31,20 +35,24 @@ slugifyAll(["Hello World", "Second Post"]);
 
 | Function | Signature | Notes |
 | --- | --- | --- |
-| `slugify` | `slugify(input: string): string` | Throws `TypeError` for non-strings. |
+| `slugify` | `slugify(input: string, options?: { maxLength?: number }): string` | Throws `TypeError` for non-strings or invalid options. |
 | `slugifyAll` | `slugifyAll(inputs: string[]): string[]` | Throws `TypeError` for non-arrays. |
 
-## Current limitations (v0.1)
+`slugify` folds Latin diacritics, preserves Unicode letters and numbers
+(including CJK), removes ASCII and typographic quotation marks instead of
+turning them into separators, and removes emoji and symbols. Its optional
+`maxLength` must be a non-negative integer or `Infinity`: `0`, `Infinity`, or
+an omitted value leaves the slug untruncated. A positive value keeps only
+complete dash-separated words that fit within the limit; if the first word is
+too long, the result is an empty string. `slugifyAll` retains its existing
+signature and behavior.
 
-The implementation keeps only `[a-z0-9]` and replaces every other run of
-characters with a single dash. That means:
-
-| Input | Output today | Problem |
-| --- | --- | --- |
-| `Café déjà vu` | `caf-d-j-vu` | accented letters are dropped instead of folded |
-| `日本語のタイトル` | `` (empty) | non-Latin scripts are dropped entirely |
-| `Hello 👋 World` | `hello-world` | fine, but emoji handling is accidental |
-| very long titles | very long slugs | no way to cap the length |
+| Input | Output |
+| --- | --- |
+| `Café déjà vu` | `cafe-deja-vu` |
+| `日本語のタイトル` | `日本語のタイトル` |
+| `Hello 世界` | `hello-世界` |
+| `Hello 👋 World 🎉` | `hello-world` |
 
 ## Development
 

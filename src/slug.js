@@ -1,30 +1,53 @@
 /**
  * Convert a human-readable title into a URL-friendly slug.
  *
- * Current behaviour (v0.1, ASCII only):
- * - lowercases the input
- * - removes single and double quotes
- * - replaces every run of characters outside `[a-z0-9]` with a single dash
- * - trims leading and trailing dashes
- *
- * Known limitations are documented in the README: characters outside
- * `[a-z0-9]` are dropped, so accented letters lose their letter and CJK
- * titles collapse to an empty string.
- *
  * @param {string} input Title to convert.
+ * @param {{ maxLength?: number }} [options] Optional slug length limit.
  * @returns {string} The slug, or an empty string when nothing survives.
  */
-export function slugify(input) {
+export function slugify(input, options = {}) {
   if (typeof input !== "string") {
     throw new TypeError("slugify expects a string");
   }
 
-  return input
+  if (options === null || typeof options !== "object" || Array.isArray(options)) {
+    throw new TypeError("slugify options must be an object");
+  }
+
+  const { maxLength } = options;
+  if (
+    maxLength !== undefined &&
+    maxLength !== 0 &&
+    maxLength !== Infinity &&
+    (!Number.isInteger(maxLength) || maxLength < 0)
+  ) {
+    throw new TypeError("maxLength must be a non-negative integer, 0, or Infinity");
+  }
+
+  const slug = input
     .trim()
+    .replace(/\p{Script=Latin}\p{M}*/gu, (letter) =>
+      letter.normalize("NFD").replace(/\p{M}/gu, ""),
+    )
     .toLowerCase()
-    .replace(/['"]/g, "")
-    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/['"‘’“”‚„]/g, "")
+    .replace(/[^\p{L}\p{N}]+/gu, "-")
     .replace(/^-+|-+$/g, "");
+
+  if (maxLength === undefined || maxLength === 0 || maxLength === Infinity) {
+    return slug;
+  }
+
+  let truncated = "";
+  for (const word of slug.split("-")) {
+    const candidate = truncated ? `${truncated}-${word}` : word;
+    if (candidate.length > maxLength) {
+      break;
+    }
+    truncated = candidate;
+  }
+
+  return truncated;
 }
 
 /**
